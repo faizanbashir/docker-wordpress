@@ -1,0 +1,44 @@
+version: '3.1'
+
+services:
+  wordpress:
+    image: wordpress:php7.2-fpm-alpine
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      WORDPRESS_DB_HOST:
+      WORDPRESS_DB_USER:
+      WORDPRESS_DB_PASSWORD:
+      WORDPRESS_DB_NAME: 
+      WORDPRESS_TABLE_PREFIX:
+      WORDPRESS_AUTH_SALT:
+      WORDPRESS_SECURE_AUTH_KEY:
+      WORDPRESS_LOGGED_IN_SALT:
+      WORDPRESS_NONCE_SALT:
+      WORDPRESS_SECURE_AUTH_SALT:
+    volumes:
+      - wp-data:
+    depends_on:
+      - db
+    networks:
+      - wp-network
+  db:
+    image: mysql:
+    restart: always
+    environment:
+      MYSQL_DATABASE: wp
+      MYSQL_ROOT_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - wp-network
+
+networks:
+  wp-network:
+    driver: bridge
+  
+volumes:
+  wp-data:
+    driver: local
